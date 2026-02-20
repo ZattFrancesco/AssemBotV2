@@ -1,59 +1,14 @@
-# Logs System Master (Discord.js v14) — /logs setup dashboard
+# Logs System Master V2 (catalog.js version)
 
-## 1) SQL à exécuter
+✔ Uses catalog.js instead of catalog.json
+✔ Fixes MODULE_NOT_FOUND issue
+✔ /logs setup dashboard included
 
-```sql
-CREATE TABLE IF NOT EXISTS logs_config (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  guild_id VARCHAR(32) NOT NULL,
-  event_key VARCHAR(64) NOT NULL,
-  enabled TINYINT(1) NOT NULL DEFAULT 0,
-  channel_id VARCHAR(32) DEFAULT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  UNIQUE KEY uniq_guild_event (guild_id, event_key)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+Make sure you copy ALL folders:
+- services/
+- commands/
+- db/
+- events/
 
-CREATE TABLE IF NOT EXISTS logs_entries (
-  id BIGINT AUTO_INCREMENT PRIMARY KEY,
-  guild_id VARCHAR(32) NOT NULL,
-  event_key VARCHAR(64) NOT NULL,
-  author_id VARCHAR(32) DEFAULT NULL,
-  victim_id VARCHAR(32) DEFAULT NULL,
-  channel_id VARCHAR(32) DEFAULT NULL,
-  message_id VARCHAR(32) DEFAULT NULL,
-  extra_json JSON DEFAULT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  INDEX idx_guild_created (guild_id, created_at),
-  INDEX idx_event_created (event_key, created_at)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-```
-
-## 2) Prérequis intents/partials
-- Intents recommandés: Guilds, GuildMembers, GuildModeration, GuildMessages, MessageContent, GuildMessageReactions, GuildVoiceStates, GuildInvites
-- Partials: Message, Channel, Reaction, GuildMember, User
-
-## 3) Intégration rapide
-Tu dois déjà avoir un loader de commands & events. Sinon:
-
-### A) Command
-- Ajoute `commands/logs.js` à ton loader slash commands
-- Déploie la commande
-
-### B) Dashboard interactions
-- Branche `events/interactionCreate.logsDashboard.js`
-  - soit via ton dispatcher `interactionCreate`
-  - soit en appelant `init(client)`
-
-### C) Events logs
-- Branche les fichiers du dossier `events/` (ceux implémentés sont prêts)
-- Pour les autres log types, tu ajoutes simplement d’autres event handlers sur le même modèle.
-
-## 4) Note importante (UI)
-Discord limite les selects à 25 options. Le dashboard fonctionne par **catégorie** (comme demandé).
-
-## 5) Fonctionnement
-- Dans `/logs setup`:
-  - Choix catégorie
-  - Toggle d’events (✅/❌)
-  - Choix salon : appliqué à tous les events de la catégorie
+Then run:
+npm run deploy
